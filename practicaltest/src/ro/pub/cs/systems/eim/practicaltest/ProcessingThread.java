@@ -2,7 +2,8 @@ package ro.pub.cs.systems.eim.practicaltest;
 
 import java.util.Date;
 import java.util.Random;
- 
+
+import android.R.array;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -35,20 +36,26 @@ public class ProcessingThread extends Thread {
     	Intent intent = new Intent();
     	intent.setAction("ACTION_INTENT");
     	
-    	//char array[] = null;
+    	char array[] = new char[answer.length()];
     	
-    	/*int number = random.nextInt()%(answer.length() -1);
+    	int number = random.nextInt()%(answer.length()-1);
+    	Log.d("number is"+number, answer);
+    	
     	for(int i = 0;i < answer.length();i++) {
     		if(i != number) {
     			array[i] = '*';
     		} else {
     			array[i] = answer.charAt(i);
     		}
-    	}*/
+    	}
     	
     	
     	
-    	intent.putExtra("message", answer);
+    	
+    	String message = String.copyValueOf(array);
+    	
+    	
+    	intent.putExtra("message", message);
     	context.sendBroadcast(intent);
 	}
  
