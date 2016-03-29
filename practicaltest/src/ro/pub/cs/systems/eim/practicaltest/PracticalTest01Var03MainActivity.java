@@ -46,6 +46,22 @@ public class PracticalTest01Var03MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
     
+    @Override
+	public void onSaveInstanceState(Bundle savedInstance) {
+		super.onSaveInstanceState(savedInstance);
+		
+		savedInstance.putString("RIDDLE_KEY", riddleText.getText().toString());
+		savedInstance.putString("ANSWER_KEY", answerText.getText().toString());
+	}
+    
+    @Override
+	public void onRestoreInstanceState(Bundle savedInstance) {
+		if(savedInstance != null) {
+			riddleText.setText(savedInstance.getString("RIDDLE_KEY"));
+			answerText.setText(savedInstance.getString("ANSWER_KEY"));
+		}
+	}
+    
     private class clickListener  implements View.OnClickListener {
 
 		@Override
@@ -53,10 +69,18 @@ public class PracticalTest01Var03MainActivity extends Activity {
 			int id = ((Button)arg0).getId();
 			switch (id) {
 			case R.id.button1:
-				Intent intent = new Intent(getApplicationContext(), Practicaltest01Var03PlayActivity.class);
-				intent.putExtra("ANSWER_KEY", answerText.getText().toString());
-				intent.putExtra("RIDDLE_KEY", riddleText.getText().toString());
-				startActivityForResult(intent, 100);
+				if(riddleText.length() > 0 && answerText.length() > 0) {
+					
+					Intent serviceIntent = new Intent(getApplicationContext(), PracticalTest01Var03Service.class);
+					serviceIntent.putExtra("ANSWER_KEY", answerText.getText().toString());
+					getApplicationContext().startService(serviceIntent);
+					
+				
+					Intent intent = new Intent(getApplicationContext(), Practicaltest01Var03PlayActivity.class);
+					intent.putExtra("ANSWER_KEY", answerText.getText().toString());
+					intent.putExtra("RIDDLE_KEY", riddleText.getText().toString());
+					startActivityForResult(intent, 100);
+				}
 				break;
 
 			default:

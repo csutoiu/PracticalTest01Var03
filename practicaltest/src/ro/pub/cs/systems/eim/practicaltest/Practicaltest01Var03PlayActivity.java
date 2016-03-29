@@ -1,8 +1,12 @@
 package ro.pub.cs.systems.eim.practicaltest;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,10 +20,15 @@ public class Practicaltest01Var03PlayActivity extends Activity {
 	EditText riddleText, answerText, scorText;
 	String correctAnswer;
 	
+	private MessageBroadcastReceiver messageBroadcastReceiver = new MessageBroadcastReceiver();
+	private IntentFilter intentFilter = new IntentFilter();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_practicaltest01_var03_play);
+		
+		intentFilter.addAction("ACTION_INTENT");
 		
 		checkBtn = (Button)findViewById(R.id.check);
 		checkBtn.setOnClickListener(new clickListener());
@@ -56,6 +65,37 @@ public class Practicaltest01Var03PlayActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+
+	@Override
+	public void onResume() {
+		registerReceiver(messageBroadcastReceiver, intentFilter);
+		super.onResume();
+	}
+	
+	@Override
+	public void onPause() {
+		unregisterReceiver(messageBroadcastReceiver);
+		super.onPause();
+	}
+	
+	@Override
+	public void onDestroy() {
+		Intent intent = new Intent(this, PracticalTest01Var03Service.class);
+		stopService(intent);
+		super.onDestroy();
+	}
+	
+	private class MessageBroadcastReceiver extends BroadcastReceiver {
+		
+		@Override
+		public void onReceive(Context arg0, Intent arg1) {
+			Log.d("[Message]", arg1.getStringExtra("message"));
+			Toast.makeText(getApplicationContext(),arg1.getStringExtra("message") , 
+					   Toast.LENGTH_LONG).show();
+			
+		}
 	}
 	
 	 private class clickListener  implements View.OnClickListener {
